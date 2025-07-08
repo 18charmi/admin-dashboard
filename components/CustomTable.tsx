@@ -1,67 +1,69 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import React from 'react';
 import {
-    DataGrid,
-    DataGridProps,
-    GridColDef,
-    GridRowsProp,
-} from '@mui/x-data-grid';
+    Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, TablePagination,
+    Box,
+} from '@mui/material';
+import { ColumnConfig } from '@/types/table';
+import LoaderSkeleton from './LoaderSkeleton';
 
-type CustomTableProps = {
-    rows: GridRowsProp;
-    columns: GridColDef[];
-    height?: number;
-    pageSize?: number;
-    renderActions?: (row: any) => React.ReactNode;
-} & Partial<DataGridProps>;
+interface CustomTableProps<T> {
+    columns: ColumnConfig<T>[];
+    rows: T[];
+    page: number;
+    totalCount: number;
+    onChangePage: (newPage: number) => void;
+}
 
-const CustomTable: React.FC<CustomTableProps> = ({
-    rows,
+function CustomTable<T extends { id: string | number }>({
     columns,
-    height = 400,
-    pageSize = 5,
-    renderActions,
-    checkboxSelection = true,
-    disableRowSelectionOnClick = true,
-    ...props
-}) => {
-    const actionColumn: GridColDef[] = renderActions
-    ? [
-        {
-          field: 'actions',
-          headerName: 'Actions',
-          width: 250,
-          sortable: false,
-          filterable: false,
-          disableColumnMenu: true,
-          renderCell: (params) => renderActions(params.row),
-        },
-      ]
-    : [];
-
+    rows,
+    page,
+    totalCount,
+    onChangePage,
+}: CustomTableProps<T>) {
     return (
-        <Box sx={{ height: 400, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={[...columns, ...actionColumn]}
+        <Box>
+            <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="listing table">
+                    <TableHead>
+                        <TableRow>
+                            {columns.map((column) => (
+                                <TableCell key={column.id.toString()} align={column.align || 'left'}>
+                                    {column.label}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.length ? rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {columns.map((column) => (
+                                    <TableCell key={column.id.toString()} align={column.align || 'left'}>
+                                        {column.render ? column.render(row) : (row[column.id as keyof T] as React.ReactNode)}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        )) : <TableRow >
+                            <TableCell align={'left'} colSpan={4}>
+                                <LoaderSkeleton />
+                            </TableCell>
+                        </TableRow>
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
-                // initialState={{
-                //     pagination: {
-                //         paginationModel: {
-                //             pageSize,
-                //         },
-                //     },
-                // }}
-                // pageSizeOptions={[pageSize]}
-                // checkboxSelection={checkboxSelection}
-                // disableRowSelectionOnClick={disableRowSelectionOnClick}
-                // paginationMode="server"
-                // sortingMode="server"
-                // filterMode="server"
-                {...props}
+            <TablePagination
+                component="div"
+                count={totalCount}
+                page={page}
+                onPageChange={(_, newPage) => onChangePage(newPage)}
+                rowsPerPage={5}
+                rowsPerPageOptions={[]}
             />
         </Box>
     );
-};
+}
 
 export default CustomTable;

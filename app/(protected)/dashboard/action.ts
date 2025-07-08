@@ -1,11 +1,12 @@
 'use server';
 import { cookies } from 'next/headers';
 import { VehicleList } from '@/types/list';
+import { LIST_LIMIT } from '@/utils/constant';
 
-export async function fetchVehicleList(limit = 2, skip = 0) {
+export async function fetchVehicleList(limit = LIST_LIMIT, skip = 0) {
 
     try {
-        const response = await fetch(`${process.env.API_HOST}/products/category/vehicle?limit=${limit}&skip=${skip}`, {
+        const response = await fetch(`${process.env.API_HOST}/products?limit=${limit}&skip=${skip}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${(await cookies()).get('session')}`, 

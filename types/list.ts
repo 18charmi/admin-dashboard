@@ -6,7 +6,8 @@ export type Pagination = {
 export type Vehicle = {
     id: number,
     title: string,
-    description: string
+    description: string,
+    status: string
 }
 export type VehicleList = {
     products: Vehicle[]

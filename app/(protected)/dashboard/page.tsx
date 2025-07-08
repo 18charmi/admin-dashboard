@@ -1,16 +1,24 @@
-import CustomTable from '@/components/CustomTable';
-import { columns, rows } from './helper';
 import { fetchVehicleList } from './action';
 import { notFound } from 'next/navigation';
+import VehicleTable from './VehicleTable';
+import { LIST_LIMIT } from '@/utils/constant';
 
-export default async function Dashboard() {
-    const res = await fetchVehicleList();
+interface PageProps {
+    searchParams: Promise<{ 'page': string | string[] | undefined }>
+}
+
+export default async function Dashboard({ searchParams }: PageProps) {
+    const pageParam = typeof (await searchParams).page === "string" ? (await searchParams).page as string : null;
+    const currentPage = parseInt(pageParam || '1', 10);
+    const skip = (currentPage - 1) * LIST_LIMIT;
+
+    const res = await fetchVehicleList(LIST_LIMIT, skip);
 
     if (!res.success) {
         notFound();
     }
 
     return (
-        <CustomTable rows={rows} columns={columns} />
+        <VehicleTable list={res.data?.products} total={res.data?.total} currentPage={currentPage} />
     );
 }
