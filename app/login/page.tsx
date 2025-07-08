@@ -2,22 +2,15 @@
 import CustomInput from "@/components/CustomInput"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
 import { useRouter } from "next/navigation"
 import CustomButton from "@/components/CustomButton"
 import { Container } from "@mui/material"
 import CustomTypography from "@/components/CustomTypography"
 import { PAGES } from "@/utils/constant"
-const schema = yup
-    .object({
-        username: yup.string().required("Username is required"),
-        password: yup.string().required("Password is required"),
-    });
-
-type Inputs = {
-    username: string
-    password: string
-}
+import { schema } from "./helper"
+import { LoginForm } from "@/types/user"
+import { useAlert } from "@/context/AlertContext"
+import { loginUser } from "./action"
 
 export default function Login() {
     const router = useRouter();
@@ -25,11 +18,16 @@ export default function Login() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>({
+    } = useForm<LoginForm>({
         resolver: yupResolver(schema)
     })
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        router.push(`/${PAGES.DASHBOARD}`)
+    const { showAlert } = useAlert();
+    const onSubmit: SubmitHandler<LoginForm> = async (data) => {
+        const { success, message } = await loginUser(data);
+        showAlert(message, success ? "success" : "error");
+        if (success) {
+            router.push(`/${PAGES.DASHBOARD}`)
+        }
     }
 
     return (
@@ -49,6 +47,7 @@ export default function Login() {
                 <CustomInput label="Password"
                     {...register("password")}
                     error={!!errors.password}
+                    type="password"
                     helperText={errors.password?.message}
                 />
                 <CustomButton className="!mt-4" label="Login" type="submit" fullWidth />
