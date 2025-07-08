@@ -38,11 +38,12 @@ const VehicleTable = ({ list = [], total = 0, currentPage }: VehicleTableProps) 
 
     useEffect(() => {
         setRows(list)
-        console.log(list);
     }, [list]);
 
     const handleAction = (id: number, action: 'approve' | 'reject' | 'edit') => {
-        console.log(`Row ${id} -> ${action}`);
+        if (action === 'edit') {
+            router.push(`/${PAGES.CONTENT}/${id}`);
+        }
         setRows(prev =>
             prev.map(row =>
                 row.id === id

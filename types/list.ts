@@ -12,3 +12,5 @@ export type Vehicle = {
 export type VehicleList = {
     products: Vehicle[]
 } & Pagination
+
+export type ContentFormReq = Pick<Vehicle, 'title' | 'description'>
