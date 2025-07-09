@@ -1,6 +1,11 @@
 # Project Info
-A admin dashboard with listing & filters, along with authentication
+A admin dashboard with listing having actions like edit, approve, reject & pagination, along with authentication 
 
+The credentials to login:
+username: emilys
+password: emilyspass
+
+rename the env.sample file to .env
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
