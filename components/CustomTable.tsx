@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination,
+    TableHead, TableRow,  TablePagination,
     Box,
 } from '@mui/material';
 import { ColumnConfig } from '@/types/table';

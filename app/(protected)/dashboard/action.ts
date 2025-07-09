@@ -1,5 +1,6 @@
 'use server';
 import { LIST_LIMIT } from '@/utils/constant';
+import { revalidatePath } from 'next/cache';
 
 export async function fetchVehicleList(limit = LIST_LIMIT, skip = 0) {
 
@@ -9,3 +10,6 @@ export async function fetchVehicleList(limit = LIST_LIMIT, skip = 0) {
     const data = await response.json()
     return data;
 }
+export async function revalidateDashboard(path: string) {
+    revalidatePath(path);
+  }

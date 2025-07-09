@@ -10,11 +10,12 @@ export async function logoutUser() {
         (await
             cookies()).delete('session');
 
-        redirect(`/${PAGES.LOGIN}`)
 
     } catch (e) {
 
         console.log("Error logoutUser : ", e);
 
     }
+    redirect(`/${PAGES.LOGIN}`)
+
 }

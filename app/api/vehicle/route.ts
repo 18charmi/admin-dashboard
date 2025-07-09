@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server';
 
-let localStatus: Record<string, Partial<Vehicle>> = {};
+const localStatus: Record<string, Partial<Vehicle>> = {};
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams

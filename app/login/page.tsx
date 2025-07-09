@@ -26,7 +26,7 @@ export default function Login() {
         const { success, message } = await loginUser(data);
         showAlert(message, success ? "success" : "error");
         if (success) {
-            router.push(`/${PAGES.DASHBOARD}`)
+            router.push(`/${PAGES.DASHBOARD}?page=1`)
         }
     }
 

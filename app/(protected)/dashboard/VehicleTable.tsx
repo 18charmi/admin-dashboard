@@ -6,10 +6,11 @@ import { Vehicle } from '@/types/list';
 import { ColumnConfig } from '@/types/table';
 import { PAGES } from '@/utils/constant';
 import { Stack } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { updateStatus } from '../content/[id]/action';
 import { useAlert } from '@/context/AlertContext';
+import { revalidateDashboard } from './action';
 
 type VehicleTableProps = {
     list?: Vehicle[],
@@ -17,30 +18,14 @@ type VehicleTableProps = {
     currentPage: number
 }
 const VehicleTable = ({ list = [], total = 0, currentPage }: VehicleTableProps) => {
-    const [rows, setRows] = useState<Vehicle[]>([]);
     const router = useRouter();
+    const pathname = usePathname();
+
     const { showAlert } = useAlert();
     const {
         page,
-        totalCount,
-        setTotalCount,
         handleChangePage,
-    } = usePagination();
-
-    useEffect(() => {
-        if (page !== currentPage - 1) {
-            router.push(`/${PAGES.DASHBOARD}?page=${page + 1}`)
-            setRows([])
-        }
-    }, [page]);
-
-    useEffect(() => {
-        setTotalCount(total);
-    }, [total])
-
-    useEffect(() => {
-        setRows(list)
-    }, [list]);
+    } = usePagination({ initialPage: currentPage - 1 });
 
     const handleAction = async (id: number, action: 'approve' | 'reject' | 'edit') => {
         if (action === 'edit') {
@@ -53,19 +38,8 @@ const VehicleTable = ({ list = [], total = 0, currentPage }: VehicleTableProps) 
             },
             );
             showAlert(message, success ? "success" : "error");
-
+            revalidateDashboard(pathname)
         }
-
-        setRows(prev =>
-            prev.map(row =>
-                row.id === id
-                    ? {
-                        ...row,
-                        status: action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : row.status,
-                    }
-                    : row
-            )
-        );
     };
 
 
@@ -92,11 +66,14 @@ const VehicleTable = ({ list = [], total = 0, currentPage }: VehicleTableProps) 
     ];
 
     return <CustomTable
-        rows={rows}
+        rows={list}
         columns={columns}
         page={page}
-        totalCount={totalCount}
-        onChangePage={handleChangePage}
+        totalCount={total}
+        onChangePage={(page) => {
+            router.push(`/${PAGES.DASHBOARD}?page=${page + 1}`)
+            handleChangePage(page)
+        }}
     />;
 };
 

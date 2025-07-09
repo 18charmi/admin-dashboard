@@ -31,7 +31,7 @@ export default function ContentForm({ detail }: ContentFormProps) {
         const { success, message } = await updateDetail(data, detail.id.toString());
         showAlert(message, success ? "success" : "error");
         if (success) {
-            router.push(`/${PAGES.DASHBOARD}`)
+            router.push(`/${PAGES.DASHBOARD}?page=1`);
         }
     }
 

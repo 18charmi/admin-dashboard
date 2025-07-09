@@ -6,7 +6,6 @@ interface UsePaginationProps {
 
 const usePagination = ({ initialPage = 0 }: UsePaginationProps = {}) => {
     const [page, setPage] = useState(initialPage);
-    const [totalCount, setTotalCount] = useState(0);
 
     const handleChangePage = (newPage: number) => {
         setPage(newPage);
@@ -14,8 +13,6 @@ const usePagination = ({ initialPage = 0 }: UsePaginationProps = {}) => {
 
     return {
         page,
-        totalCount,
-        setTotalCount,
         handleChangePage,
     };
 };
