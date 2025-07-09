@@ -4,51 +4,34 @@ import { cookies } from 'next/headers';
 
 export async function fetchDetail(id: string) {
 
-    try {
-        const response = await fetch(`${process.env.API_HOST}/products/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/vehicle?id=${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${(await cookies()).get('session')}`,
                 'Content-Type': 'application/json',
             },
         })
-
-        if (!response.ok) {
-            throw new Error(`HTTP error status ${response.status}`);
-        }
-        const detail = await response.json() as Vehicle;
-        return { success: true, data: detail };
-
-    } catch (e) {
-
-        console.log("Error fetchVehicleDetail : ", e);
-        return { success: false, message: "failed to fetch vehicle detail" };
-
-    }
+        return await response.json();
 }
 
 export async function updateDetail(data: ContentFormReq, id: string) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/vehicle`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...data, id }),
+    })
+    return await response.json();
+}
 
-    try {
-        const response = await fetch(`${process.env.API_HOST}/products/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-
-        if (!response.ok) {
-            throw new Error(`HTTP error status ${response.status}`);
-        }
-        const detail = await response.json() as Vehicle;
-
-        return { success: true, message: "updateDetail Success" };
-
-    } catch (e) {
-
-        console.log("Error updateDetail : ", e);
-        return { success: false, message: "updateDetail" };
-
-    }
+export async function updateStatus(data: Pick<Vehicle, 'status' | 'id'>) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/vehicle`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    return await response.json();
 }
