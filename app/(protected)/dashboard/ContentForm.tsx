@@ -2,19 +2,15 @@
 import CustomInput from "@/components/CustomInput"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useRouter } from "next/navigation"
 import CustomButton from "@/components/CustomButton"
 import { Container } from "@mui/material"
-import CustomTypography from "@/components/CustomTypography"
-import { PAGES } from "@/utils/constant"
 import { useAlert } from "@/context/AlertContext"
 import { schema } from "./helper"
 import { ContentFormReq, Vehicle } from "@/types/list"
 import { updateDetail } from "./action"
 
-type ContentFormProps = { detail: Vehicle }
-export default function ContentForm({ detail }: ContentFormProps) {
-    const router = useRouter();
+type ContentFormProps = { detail: Vehicle; handleFormSubmit: () => void }
+export default function ContentForm({ detail, handleFormSubmit }: ContentFormProps) {
     const {
         register,
         handleSubmit,
@@ -30,19 +26,12 @@ export default function ContentForm({ detail }: ContentFormProps) {
     const onSubmit: SubmitHandler<ContentFormReq> = async (data) => {
         const { success, message } = await updateDetail(data, detail.id.toString());
         showAlert(message, success ? "success" : "error");
-        if (success) {
-            router.push(`/${PAGES.DASHBOARD}?page=1`);
-        }
+        handleFormSubmit();
     }
 
     return (
         <Container maxWidth="sm" className="p-4">
             <form onSubmit={handleSubmit(onSubmit)} >
-
-                <>
-                    <CustomTypography text="Update Content Detail" variant="subtitle1" component="label" className="text-gray-600" />
-                    <hr className="my-4 text-gray-400 w-full" />
-                </>
 
                 <CustomInput label="Title"
                     {...register("title")}

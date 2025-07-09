@@ -1,3 +1,4 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AlertProvider } from "@/context/AlertContext";
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AlertProvider>
-          {children}
-        </AlertProvider>
+        <AppRouterCacheProvider>
+          <AlertProvider>
+            {children}
+          </AlertProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
