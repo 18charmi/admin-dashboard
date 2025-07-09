@@ -4,7 +4,7 @@ import usePagination from '@/hook/usePagination';
 import { Vehicle } from '@/types/list';
 import { ColumnConfig } from '@/types/table';
 import { PAGES } from '@/utils/constant';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import EditAction from './EditAction';
 
