@@ -10,6 +10,7 @@ const CustomInput = ({
 }: CustomInputProps) => {
     return (
         <TextField
+            data-testid={`${String(props.label)?.toLowerCase()}-container`}
             variant={variant}
             fullWidth={fullWidth}
             margin="normal"
