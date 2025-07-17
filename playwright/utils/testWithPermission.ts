@@ -1,9 +1,7 @@
 import { test as base } from '@playwright/test';
 
-export type Options = { defaultItem: string };
-
-// Extend basic test by providing a "defaultItem" option and a "todoPage" fixture.
-export const test = base.extend<Options>({
-  
+// defining the usage of default user sesion by extending test function
+export const test = base.extend({
+    storageState: 'playwright/.auth/user.json'
 });
-test.use({ storageState: 'playwright/.auth/user.json' });
+
