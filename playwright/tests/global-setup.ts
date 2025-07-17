@@ -11,21 +11,17 @@ async function globalSetup() {
     const browser = await chromium.launch();
     const page = await browser.newPage();
 
-    if (fs.existsSync(authFile)) {
-        console.log('✅ Storage state already exists, skipping setup.');
-    } else {
-        await page.goto(`${APP_URL}/dashboard`);
-        await page.getByRole('textbox', { name: 'username' }).fill("emilys")
-        await page.getByRole('textbox', { name: 'password' }).fill("emilyspass")
-        await page.locator('button[type=submit]').click();
+    await page.goto(`${APP_URL}/dashboard`);
+    await page.getByRole('textbox', { name: 'username' }).fill("emilys")
+    await page.getByRole('textbox', { name: 'password' }).fill("emilyspass")
+    await page.locator('button[type=submit]').click();
 
-        // Wait until the page user session is stored in the cookies.
-        await expect(page).toHaveURL(/\/dashboard/);
+    // Wait until the page user session is stored in the cookies.
+    await expect(page).toHaveURL(/\/dashboard/);
 
-        // End of authentication steps.
-        await page.context().storageState({ path: authFile });
+    // End of authentication steps.
+    await page.context().storageState({ path: authFile });
 
-    }
     await browser.close();
 }
 

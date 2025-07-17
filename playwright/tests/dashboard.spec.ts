@@ -3,7 +3,7 @@ import { test } from '../utils/testWithPermission';
 const APP_URL = String(process.env.NEXT_PUBLIC_SITE_URL);
 
 test.describe('Validating unauthorized access: by defining empty session details', () => {
-    test.use({ storageState: { cookies: [], origins: [] } });
+    test.use({ storageState: undefined });
 
     test('Test not authorized page, redirect to login', async ({ page }) => {
         await page.goto(`${APP_URL}/dashboard`);
